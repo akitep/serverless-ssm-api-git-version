@@ -11,3 +11,16 @@ custom:
   ssmApiGitVersion:
     ssmPrefix: '/my-custom/prefix/'
 ```
+
+Note that the plugin currently always uses the region supplied in the `provider` section of serverless configuration, regardless of the command line region parameter.
+
+## Usage
+
+Simply include the plugin in your serverless project:
+
+```yaml
+plugins:
+  - serverless-ssm-api-git-version
+```
+
+On `sls deploy`, SSM is updated automatically.
