@@ -9,7 +9,7 @@ The API git versions are updated into SSM using a specific key prefix, which by 
 ```yaml
 custom:
   ssmApiGitVersion:
-    ssmPrefix: '/my-custom/prefix/'
+    ssmPrefix: '/my-custom/<stage>/prefix/'
 ```
 
 The `<stage>` placeholder gets replaced with the stack stage.
