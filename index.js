@@ -19,14 +19,15 @@ class ServerlessPlugin {
     this.commands = {};
 
     this.hooks = {
-      'deploy:finalize': this.updateGitDescriptionToSsm.bind(this)
+      'after:aws:deploy:deploy:updateStack': this.updateGitDescriptionToSsm.bind(this)
     };
   }
 
   updateGitDescriptionToSsm() {
     this.serverless.cli.log('SSM API git version: Acquiring git description...');
 
-    const region = this.serverless.service.provider.region;
+    const stage = this.options.stage;
+    const region = this.options.region;
 
     const SSM = new AWS.SSM({ region });
 
@@ -46,7 +47,11 @@ class ServerlessPlugin {
 
     return promisexec('git describe --tags')
       .then(value => {
-        const ssmPrefix = this.serverless.service.custom.ssmApiGitVersion.ssmPrefix || '/api-gateway/versions/';
+        const ssmPrefix = (this.serverless.service.custom
+        && this.serverless.service.custom.ssmApiGitVersion
+        && this.serverless.service.custom.ssmApiGitVersion.ssmPrefix)
+          ? this.serverless.service.custom.ssmApiGitVersion.ssmPrefix.replace(/<stage>/g, stage)
+          : `/api-gateway/${stage}/versions/`;
         const name = ssmPrefix + this.serverless.service.service;
 
         this.serverless.cli.log(`SSM API git version: Updating git description '${value}' to SSM with key '${name}' at region ${region}`);

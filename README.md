@@ -4,7 +4,7 @@ A simple plugin that, when deploying your API, updates SSM Parameter Store with 
 
 ## Configuration
 
-The API git versions are updated into SSM using a specific key prefix, which by default is '/api-gateway/versions/'. If you want to supply a custom prefix, you can do so by putting the following configuration in your serverless config file:
+The API git versions are updated into SSM using a specific key prefix, which by default is '/api-gateway/<stage>/versions/'. If you want to supply a custom prefix, you can do so by putting the following configuration in your serverless config file:
 
 ```yaml
 custom:
@@ -12,7 +12,7 @@ custom:
     ssmPrefix: '/my-custom/prefix/'
 ```
 
-Note that the plugin currently always uses the region supplied in the `provider` section of serverless configuration, regardless of the command line region parameter.
+The `<stage>` placeholder gets replaced with the stack stage.
 
 ## Usage
 
