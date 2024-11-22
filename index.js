@@ -1,7 +1,7 @@
 'use strict';
 
 const { exec } = require('child_process');
-const AWS = require('aws-sdk');
+const { PutParameterCommand, SSMClient } = require("@aws-sdk/client-ssm");
 
 const promisexec = (command) => new Promise((resolve, reject) => {
   exec(command, (error, stdout, stderr) => {
@@ -29,21 +29,18 @@ class ServerlessPlugin {
     const stage = this.options.stage;
     const region = this.options.region;
 
-    const SSM = new AWS.SSM({ region });
+    const SSM = new SSMClient({ region });
 
-    const putSsmParameter = (name, value) => new Promise((resolve, reject) => {
-      var params = {
+    const putSsmParameter = (name, value) => {
+      const putCommand = new PutParameterCommand({
         Name: name,
         Type: 'String',
         Value: value,
         Overwrite: true
-      };
-      SSM.putParameter(params, (err, data) => {
-        if (err) {reject(err);}
-        else {resolve(data);}
       });
-    });
 
+      return SSM.send(putCommand);
+    };
 
     return promisexec('git describe --tags')
       .then(value => {

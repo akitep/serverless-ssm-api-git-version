@@ -13,6 +13,6 @@
   "author": "Joonas Laitio <jlaitio@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "2.284.1"
+    "@aws-sdk/client-ssm": "^3.698.0"
   }
 }
